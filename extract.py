@@ -1,5 +1,3 @@
-import sys
-
 from constants import URL, HEADERS
 from typing import List
 from dataclasses import dataclass
@@ -9,10 +7,18 @@ import requests
 import json
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 @dataclass
 class UserData:
+    """
+        Represents a user object obtained from the Random User API.
+
+        Attributes:
+            gender (str): The user's gender.
+            location (dict): A dictionary containing user's location details.
+            email (str): The user's email address.
+            registered (dict): A dictionary containing user's registration information.
+            nat (str): The user's nationality.
+        """
     gender: str
     location: dict
     email: str
@@ -54,28 +60,38 @@ class Registered:
 
 class RandomUserAPI:
     def __init__(self) -> None:
+        """
+               Initializes a RandomUserAPI object with the provided URL and headers.
+
+               Args:
+                   None
+        """
         self.url = URL
         self.headers = HEADERS
 
     def extract_all_data(self) -> List[UserData]:
+        """
+                Extracts all user data from the Random User API, respecting pagination.
+
+                Returns:
+                    List[UserData]: A list of UserData objects containing user information.
+                """
         all_data = []
         next_page_url = self.url
 
         while next_page_url:
             logger.info(f"Fetching data from {next_page_url}")
-
             try:
                 response = requests.get(next_page_url, headers=self.headers)
                 response.raise_for_status()
-
                 data = response.json()
                 users = data.get('results', [])
                 all_data.extend(users)
                 logger.info(f"Fetched {len(users)} users")
                 for user in users:
                     all_data.append(UserData(**user))
-            except Exception as e:
-                logger.error(f"Error fetching or parsing data: {e}")
+            except requests.exceptions.RequestException as e:
+                   logger.error(f"Error fetching or parsing data: {e}")
             finally:
                  next_page_url = data.get('next_page_url', None)
             if len(all_data) >= 10:
@@ -86,6 +102,13 @@ class RandomUserAPI:
         return all_data
 
     def save_to_json(self, data: List[UserData], filename: str) -> None:
+        """
+                Saves a list of UserData objects to a JSON file.
+
+                Args:
+                    data (List[UserData]): The list of user data to save.
+                    filename (str): The filename for the JSON file.
+                """
         with open(filename, "w") as file:
             json.dump([vars(user) for user in data], file, indent=4)
 
