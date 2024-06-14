@@ -80,17 +80,16 @@ class RandomUserAPI:
                     List[UserData]: A list of UserData objects containing user information.
                 """
         all_data = []
-        next_page_url = self.url
 
-        while next_page_url:
-            logging.info(f"Fetching data from {next_page_url}")
+        while len(all_data) < 1000:
+            # logging.info(f"Fetching data from {self.url}")
             try:
-                response = requests.get(next_page_url, headers=self.headers)
+                response = requests.get(url=self.url, headers=self.headers)
                 response.raise_for_status()
                 data = response.json()
                 users = data.get('results', [])
                 all_data.extend(users)
-                logging.info(f"Fetched {len(users)} users")
+                # logging.info(f"Fetched {len(users)} users")
                 for user in users:
                     user_data = {
                         "gender": user.get('gender'),
@@ -103,28 +102,25 @@ class RandomUserAPI:
                         "nat": user.get('nat'),
                     }
                     all_data.append(UserData(**user_data))
-                    next_page_url = data.get('next_page_url', None)
             except requests.exceptions.RequestException as e:
-                   logging.error(f"Error fetching or parsing data: {e}")
-            finally:
-                 next_page_url = data.get('next_page_url', None)
-            # if len(all_data) >= 10:
-            #     for user in all_data[:10]:
-            #         logging.info(f"Extracted user: {user}")
+                logging.error(f"Error fetching or parsing data: {e}")
 
-            # else:
-            #     logging.warning(f"Extracted only {len(all_data)} users. Might be less than expected.")
         return all_data
 
-    def save_to_json(self, data: List[UserData], filename: str) -> None:
+
+    def save_to_json(self, data: List[UserData], directory: str, filename: str) -> None:
         """
-                Saves a list of UserData objects to a JSON file.
+                Saves a list of UserData objects to a JSON file in raw_data directory.
 
                 Args:
                     data (List[UserData]): The list of user data to save.
+                    directory (str): The directory to save the data in.
                     filename (str): The filename for the JSON file.
                 """
-        with open(filename, "w") as file:
+        file_path = f"{directory}/{filename}.json"
+
+        with open(file_path, "w") as file:
             json.dump([vars(user) for user in data], file, indent=4)
 
-RandomUserAPI().extract_all_data()
+
+
