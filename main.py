@@ -1,32 +1,51 @@
-from constants import URL, HEADERS
-from extract import RandomUserAPI
-from transform import *
-from settings import *
+from constants import URL
+from extract import extract_one_user
+from dataclasses import dataclass
 import pandas as pd
 import requests
-import json
+import logging
 
 # Extraction part
 
-# Initializing RandomUserAPI object
-api = RandomUserAPI()
+# Calling function for extracting one user
+one_user = extract_one_user(URL)
 
-# Extracting user data
-all_data = api.extract_all_data()
+# def extract_all_users(URL: str) -> dict:
+#     """
+#     Extracts 1000 user data from the URL and returns dictionary:
+#
+#     Args:
+#          URL(type hint: str) : the URL from which we extract the data.
+#
+#     Returns:
+#          dict: A dictionary containing the extracted data.
+#
+#     Logs:
+#          INFO: logs the number of extracted users.
+#          WARNING: logs a message if we already extracted 1000 users.
+#     """
+#     extracted_users = {}
+#     for i in range(10):
+#         user = extract_one_user(URL)
+#         if user:
+#             extracted_users[i] = user
+#             if extracted_users:
+#                 logging.info(f"Extracted {len(extracted_users)} users")
+#             else:
+#                 logging.warning("No users extracted")
+#
+#     return extracted_users
 
-# Saving data to JSON and in raw_data directory
-api.save_to_json(all_data, directory=raw_data, filename="all_data.json")
+df = pd.DataFrame.from_dict(one_user)
+# extracted_users = extract_all_users(URL)
+
 
 # Transformation part
 
-# Calling functions from transform.py
-dob_to_datetime(df, 'dob.date')
-registered_to_datetime(df, 'registered.date')
-dob_age(df, 'dob.date')
-registered_age(df, 'registered.date')
+# Defining column names and turning data into dataframe
+# df = pd.DataFrame.from_dict(extracted_users)
 
 
-# Loading part
-load_data_to_database(df, dbname, user, host, password, port)
-
-
+df['Name'] = df['name'].apply(lambda x: f"{x.get('first', '')} {x.get('last', '')}")
+df.to_json("example.json", orient="index", indent=4)
+print(df)

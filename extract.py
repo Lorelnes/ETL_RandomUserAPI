@@ -5,7 +5,20 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-def extract_all_data(URL: str) -> dict:
+def extract_one_user(URL: str) -> dict:
+    """
+    Fetches data from URL, parses JSON response, and extracts
+    the first user data element from 'results' key.
+
+    Args:
+    URL(str): URL to get data from.
+
+    Returns:
+    dict: The first user data element if found, otherwise None.
+
+    Raises:
+    requests.exceptions.RequestException: If an error occurs while fetching data.
+    """
     try:
         response = requests.get(url=URL)
         response.raise_for_status()
@@ -23,6 +36,5 @@ def extract_all_data(URL: str) -> dict:
     except requests.exceptions.RequestException as e:
         logging.error(f"Error fetching data from {URL}: {e}")
 
-data = extract_all_data(URL)
-print(data)
+
 
