@@ -5,6 +5,7 @@ from extract import extract_one_user
 from dataclasses import dataclass
 from typing import List, Dict
 from geopy.geocoders import Nominatim
+from pydantic import BaseModel, EmailStr
 import pandas as pd
 import requests
 import logging
@@ -115,7 +116,20 @@ def parsing_phoneloc(phoneloc: pd.Series) -> pd.Series:
     Returns:
         Pandas series containing parsed phone numbers in E164 format.
     """
+    # phnumber = phonenumbers.parse(phoneloc, 'US')
     phnumber = phonenumbers.parse(phoneloc, 'US')
     return phonenumbers.format_number(phnumber, phonenumbers.PhoneNumberFormat.E164)
 
 df['phone'] = df['phone'].apply(parsing_phoneloc)
+
+# Validating email with pydantic
+class UserEmail(BaseModel):
+    email: EmailStr
+
+df_to_dict = df.to_dict(orient='records')
+
+valid_data = []
+for i in df_to_dict:
+    valid_data.append(i)
+
+df = pd.DataFrame(valid_data)
