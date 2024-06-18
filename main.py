@@ -1,3 +1,5 @@
+import phonenumbers
+
 from constants import URL
 from extract import extract_one_user
 from dataclasses import dataclass
@@ -6,6 +8,7 @@ from geopy.geocoders import Nominatim
 import pandas as pd
 import requests
 import logging
+from phonenumbers import geocoder
 
 # Extraction part
 
@@ -48,9 +51,21 @@ df = pd.DataFrame(extracted_users)
 # Normalizing column 'name'
 df['name'] = df['name'].apply(lambda x: f"{x.get('first', '')} {x.get('last', '')}")
 
+
 # Dynamically generating location based on coordinates
 geolocator = Nominatim(user_agent='geoapieExercises', timeout=10)
 def get_location(row):
+    '''
+    This function extracts latitude and longitude from the 'coordinates' dictionary
+    in the 'location' column.
+    Dynamically finds location using those coordinates.
+
+    Args:
+        row: A dictionary containing the extracted data.
+
+    Returns:
+        Location which is a string containing detailed location information.
+    '''
     latitude = [row.get('coordinates', {}).get('latitude') for row in df['location']]
     longitude = [row.get('coordinates', {}).get('longitude') for row in df['location']]
     if latitude is None and longitude is None:
@@ -65,7 +80,16 @@ get_location(df)
 df['location'] = df['location'].apply(get_location)
 
 # Creating new column containing user initials and moving it after 'name' column
-def initials(name):
+def initials(name: str) -> str:
+    '''
+    This function generates initials based on 'name' column.
+
+    Args:
+        name: column containing names and lastnames of users.
+
+    Returns:
+        A string containing initials for users' full names.
+    '''
     init = ""
     for n in name.split():
         init+=n[0]
@@ -77,6 +101,21 @@ name_index = column_names.index('name')
 column_names.insert(name_index + 1, column_names.pop(column_names.index('initials')))
 df = df[column_names]
 
+# Formatting phone numbers in E164
 
+df['phoneloc'] = df['phone'] + ', ' + df['nat']
+def parsing_phoneloc(phoneloc: pd.Series) -> pd.Series:
+    """
+    Based on 'phoneloc' column we defined above by joining 'phone' and 'nat' columns,
+    this function creates E164 formatting for phone numbers.
 
+    Args:
+        phoneloc: Pandas series containing strings which represent phone number and nationality.
 
+    Returns:
+        Pandas series containing parsed phone numbers in E164 format.
+    """
+    phnumber = phonenumbers.parse(phoneloc, 'US')
+    return phonenumbers.format_number(phnumber, phonenumbers.PhoneNumberFormat.E164)
+
+df['phone'] = df['phone'].apply(parsing_phoneloc)
