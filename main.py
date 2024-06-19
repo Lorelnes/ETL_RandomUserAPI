@@ -72,8 +72,8 @@ def get_location(row):
     if latitude is None and longitude is None:
         return None
 
-    for lan, lon in zip(latitude, longitude):
-        coordinates = f"{lan},{lon}"
+    for lat, lon in zip(latitude, longitude):
+        coordinates = f"{lat},{lon}"
         Location = geolocator.geocode(coordinates)
 
 get_location(df)
@@ -101,7 +101,6 @@ column_names = list(df.columns)
 name_index = column_names.index('name')
 column_names.insert(name_index + 1, column_names.pop(column_names.index('initials')))
 df = df[column_names]
-
 # Formatting phone numbers in E164
 
 df['phoneloc'] = df['phone'] + ', ' + df['nat']
@@ -116,11 +115,11 @@ def parsing_phoneloc(phoneloc: pd.Series) -> pd.Series:
     Returns:
         Pandas series containing parsed phone numbers in E164 format.
     """
-    # phnumber = phonenumbers.parse(phoneloc, 'US')
     phnumber = phonenumbers.parse(phoneloc, 'US')
     return phonenumbers.format_number(phnumber, phonenumbers.PhoneNumberFormat.E164)
 
 df['phone'] = df['phone'].apply(parsing_phoneloc)
+df = df.drop(columns=['phoneloc'])
 
 # Validating email with pydantic
 class UserEmail(BaseModel):
@@ -133,3 +132,28 @@ for i in df_to_dict:
     valid_data.append(i)
 
 df = pd.DataFrame(valid_data)
+
+# Formatting dob as datetime and renaming it 'date_of_birth'
+df['date_of_birth'] = df['dob'].apply(lambda x: pd.to_datetime(x['date']))
+
+# Formatting registered as datetime and renaming it 'registration_date'
+df['registration_date'] = df['registered'].apply(lambda x: pd.to_datetime(x['date']))
+
+# Dynamically calculating age based on date_of_birth, removing 'age' key from 'dob' column, making it a separate column, then dropping 'dob' column altogether
+df['dob'] = df['dob'].apply(lambda x: pd.to_datetime(x['date']))
+today = pd.Timestamp.today().year
+df['age'] = today - df['dob'].dt.year
+df = df.drop(columns=['dob'])
+
+# Dynamically calculating age as a user based on registration_date, making age_as_user separate column, dropping 'registered' column
+df['registered'] = df['registered'].apply(lambda x: pd.to_datetime(x['date']))
+df['age_as_user'] = today - df['registered'].dt.year
+df = df.drop(columns=['registered'])
+
+# Dropping unnecessary columns
+df = df.drop(columns=['login', 'cell', 'picture'])
+
+# Reordering the columns
+reordered = ['gender', 'name', 'initials', 'location', 'date_of_birth', 'age', 'registration_date', 'age_as_user', 'email', 'phone', 'id', 'nat']
+df = df[reordered]
+
