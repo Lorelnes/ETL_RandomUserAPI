@@ -1,0 +1,282 @@
+[
+    {
+        "gender": "male",
+        "name": {
+            "title": "Mr",
+            "first": "Lewis",
+            "last": "Wood"
+        },
+        "location": {
+            "street": {
+                "number": 2807,
+                "name": "Evans Street"
+            },
+            "city": "Timaru",
+            "state": "Hawke'S Bay",
+            "country": "New Zealand",
+            "postcode": 91184,
+            "coordinates": {
+                "latitude": "55.4926",
+                "longitude": "-44.6529"
+            },
+            "timezone": {
+                "offset": "+9:00",
+                "description": "Tokyo, Seoul, Osaka, Sapporo, Yakutsk"
+            }
+        },
+        "email": "lewis.wood@example.com",
+        "login": {
+            "uuid": "aee44c4e-8c4a-47f2-8e0c-c96ffdf8c5d7",
+            "username": "angryrabbit820",
+            "password": "temp123",
+            "salt": "IXsOB0jY",
+            "md5": "c8ad82a70dc2bcffc19db461fe6439ee",
+            "sha1": "ee8d8954391e73c005df9419ab9063f2d811cdbe",
+            "sha256": "7b0a2d5cc94e58c5fd79e6f769dc3d70acf269b2fdf8d4e7f8908db29d22bf78"
+        },
+        "dob": {
+            "date": "1978-06-29T02:25:29.488Z",
+            "age": 46
+        },
+        "registered": {
+            "date": "2009-12-27T05:24:46.181Z",
+            "age": 14
+        },
+        "phone": "(989)-573-8462",
+        "cell": "(915)-907-0348",
+        "id": {
+            "name": "",
+            "value": null
+        },
+        "picture": {
+            "large": "https://randomuser.me/api/portraits/men/98.jpg",
+            "medium": "https://randomuser.me/api/portraits/med/men/98.jpg",
+            "thumbnail": "https://randomuser.me/api/portraits/thumb/men/98.jpg"
+        },
+        "nat": "NZ"
+    },
+    {
+        "gender": "female",
+        "name": {
+            "title": "Miss",
+            "first": "Danka",
+            "last": "Stanojevi\u0107"
+        },
+        "location": {
+            "street": {
+                "number": 6232,
+                "name": "Bobova\u010dka"
+            },
+            "city": "Bela Palanka",
+            "state": "Ma\u010dva",
+            "country": "Serbia",
+            "postcode": 32823,
+            "coordinates": {
+                "latitude": "62.2220",
+                "longitude": "101.1213"
+            },
+            "timezone": {
+                "offset": "+3:00",
+                "description": "Baghdad, Riyadh, Moscow, St. Petersburg"
+            }
+        },
+        "email": "danka.stanojevic@example.com",
+        "login": {
+            "uuid": "2c389114-42ed-4ade-978c-b4046ae1aa96",
+            "username": "silverpanda337",
+            "password": "listen",
+            "salt": "i6ZO25ZE",
+            "md5": "e85fe1967a2787b74e10cae3fd7d7af6",
+            "sha1": "6a4293331cd2fdd103eb1ab3519b2c4ae139c206",
+            "sha256": "9bc0d42f6c7388eb2884c438b5aa044d9e5e934c3dc942167dbdba09bfb5e4fc"
+        },
+        "dob": {
+            "date": "1946-10-10T23:25:08.655Z",
+            "age": 77
+        },
+        "registered": {
+            "date": "2007-11-08T06:09:52.638Z",
+            "age": 16
+        },
+        "phone": "028-0665-346",
+        "cell": "060-8326-502",
+        "id": {
+            "name": "SID",
+            "value": "859853272"
+        },
+        "picture": {
+            "large": "https://randomuser.me/api/portraits/women/41.jpg",
+            "medium": "https://randomuser.me/api/portraits/med/women/41.jpg",
+            "thumbnail": "https://randomuser.me/api/portraits/thumb/women/41.jpg"
+        },
+        "nat": "RS"
+    },
+    {
+        "gender": "female",
+        "name": {
+            "title": "Madame",
+            "first": "Sara",
+            "last": "Richard"
+        },
+        "location": {
+            "street": {
+                "number": 3082,
+                "name": "Rue de Cuire"
+            },
+            "city": "Madulain",
+            "state": "Appenzell Ausserrhoden",
+            "country": "Switzerland",
+            "postcode": 9733,
+            "coordinates": {
+                "latitude": "-59.3903",
+                "longitude": "146.0423"
+            },
+            "timezone": {
+                "offset": "+1:00",
+                "description": "Brussels, Copenhagen, Madrid, Paris"
+            }
+        },
+        "email": "sara.richard@example.com",
+        "login": {
+            "uuid": "dda74781-92bc-409b-bb37-4117aff6b30a",
+            "username": "lazyfish205",
+            "password": "closer",
+            "salt": "kTVcLR7S",
+            "md5": "88c543a6502865b60e9e16ef1eb27291",
+            "sha1": "1b154be62b620c0e7e0480585fc1ddb355f1aeca",
+            "sha256": "35a87e7d96d2b903e0c38e447782275ab5858316169cb75fb35d247d3cb2712e"
+        },
+        "dob": {
+            "date": "1950-01-14T05:09:48.380Z",
+            "age": 74
+        },
+        "registered": {
+            "date": "2011-12-14T10:04:45.474Z",
+            "age": 12
+        },
+        "phone": "076 720 62 90",
+        "cell": "079 023 43 18",
+        "id": {
+            "name": "AVS",
+            "value": "756.3289.0787.24"
+        },
+        "picture": {
+            "large": "https://randomuser.me/api/portraits/women/62.jpg",
+            "medium": "https://randomuser.me/api/portraits/med/women/62.jpg",
+            "thumbnail": "https://randomuser.me/api/portraits/thumb/women/62.jpg"
+        },
+        "nat": "CH"
+    },
+    {
+        "gender": "female",
+        "name": {
+            "title": "Ms",
+            "first": "Olivia",
+            "last": "Davidson"
+        },
+        "location": {
+            "street": {
+                "number": 3138,
+                "name": "Spring Hill Rd"
+            },
+            "city": "Wagga Wagga",
+            "state": "New South Wales",
+            "country": "Australia",
+            "postcode": 2746,
+            "coordinates": {
+                "latitude": "-84.9795",
+                "longitude": "152.3015"
+            },
+            "timezone": {
+                "offset": "+11:00",
+                "description": "Magadan, Solomon Islands, New Caledonia"
+            }
+        },
+        "email": "olivia.davidson@example.com",
+        "login": {
+            "uuid": "b3ff5ce3-51d5-41ba-b954-b858aadd59ee",
+            "username": "crazyostrich555",
+            "password": "ficken",
+            "salt": "eYthRQpK",
+            "md5": "e64a7c34d2aabef73e213840c881504c",
+            "sha1": "4940cf376a84a673440d7697de25e8e283dae997",
+            "sha256": "0b024a81cf50db04c60b435bef8ce2fd1f606e94758d1d048645ba9be9ab2fa9"
+        },
+        "dob": {
+            "date": "1963-05-09T12:42:41.088Z",
+            "age": 61
+        },
+        "registered": {
+            "date": "2013-04-26T14:08:28.469Z",
+            "age": 11
+        },
+        "phone": "06-8836-8938",
+        "cell": "0406-545-821",
+        "id": {
+            "name": "TFN",
+            "value": "124050401"
+        },
+        "picture": {
+            "large": "https://randomuser.me/api/portraits/women/63.jpg",
+            "medium": "https://randomuser.me/api/portraits/med/women/63.jpg",
+            "thumbnail": "https://randomuser.me/api/portraits/thumb/women/63.jpg"
+        },
+        "nat": "AU"
+    },
+    {
+        "gender": "female",
+        "name": {
+            "title": "Miss",
+            "first": "Elsa",
+            "last": "Tanner"
+        },
+        "location": {
+            "street": {
+                "number": 3729,
+                "name": "Verkatehtaankatu"
+            },
+            "city": "Nurmes",
+            "state": "\u00c5land",
+            "country": "Finland",
+            "postcode": 86130,
+            "coordinates": {
+                "latitude": "-26.0785",
+                "longitude": "31.9441"
+            },
+            "timezone": {
+                "offset": "-4:00",
+                "description": "Atlantic Time (Canada), Caracas, La Paz"
+            }
+        },
+        "email": "elsa.tanner@example.com",
+        "login": {
+            "uuid": "3e245e9f-de5c-4727-ac80-467038dc8946",
+            "username": "angryfish492",
+            "password": "lemmein",
+            "salt": "4tXCiEjU",
+            "md5": "f4b53a6f3c0188da68cf28df75f4cc32",
+            "sha1": "15915d61f40d250a328f251edb7b287fca353999",
+            "sha256": "2b646d10ff7e4986fd3c8755ce4cb5a03cba2bc6603cfe3a5f6965b1e5297d75"
+        },
+        "dob": {
+            "date": "1972-03-28T04:11:57.749Z",
+            "age": 52
+        },
+        "registered": {
+            "date": "2003-05-29T14:54:15.833Z",
+            "age": 21
+        },
+        "phone": "06-875-533",
+        "cell": "040-523-35-42",
+        "id": {
+            "name": "HETU",
+            "value": "NaNNA584undefined"
+        },
+        "picture": {
+            "large": "https://randomuser.me/api/portraits/women/18.jpg",
+            "medium": "https://randomuser.me/api/portraits/med/women/18.jpg",
+            "thumbnail": "https://randomuser.me/api/portraits/thumb/women/18.jpg"
+        },
+        "nat": "FI"
+    }
+]

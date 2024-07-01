@@ -1,45 +1,35 @@
 from constants import create_table_query, insert_data_query
-from transform import df
+from extract import *
 from settings import dbname, user, host, password, port
+from psycopg2.extras import execute_values
+import pandas as pd
 import psycopg2
 import logging
+import os
+import json
+def load_to_raw_data(data: list, filename: str = 'all_data.json') -> None:
+    raw_data_dir = 'raw_data'
+    filepath = os.path.join(raw_data_dir, filename)
 
-def check_table_existence(conn, table_name: str):
-    """
-      Checks if a table with the specified name exists in the connected database.
+    with open(filepath, 'w') as json_file:
+        json.dump(data, json_file, indent = 4)
+        logging.info(f'Data was saved to {filepath}')
 
-      Args:
-          conn: A psycopg2 connection object to the database.
-          table_name: The name of the table to check for existence.
-
-      Returns:
-          True if the table exists, False otherwise.
-      """
-    cur = conn.cursor()
-    cur.execute("SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = %s)", (table_name))
-    exists = cur.fetchone()[0]
-    cur.close()
-    return exists
-
-def table_name_from_schema(conn, table_name: str, schema: dict) -> None:
+def create_table(conn) -> None:
     """
       Creates a table in the connected database based on the provided schema.
 
       Args:
           conn: A psycopg2 connection object to the database.
-          table_name: The desired name for the created table.
-          schema: A dictionary defining the table's columns and their data types.
-              Dictionary keys are column names, and values are data types as strings.
 
-      Raises:
-          Exception: If the table creation fails.
       """
     try:
-        columns = ", ".join(f"{column_name} {data_type}" for column_name, data_type in schema.items())
-        cur.execute(f"CREATE TABLE {table_name} ({columns})")
+        cur = conn.cursor()
+        cur.execute(create_table_query)
         conn.commit()
+        logging.info(f'Table was created')
     except psycopg2.Error as e:
-        logging.error(f"Error creating table '{table_name}': {e}")
+        logging.error(f"Error creating table: {e}")
     finally:
         cur.close()
 
@@ -61,11 +51,15 @@ def load_data_to_database(df: pd.DataFrame, dbname: str, user: str, host: str, p
     try:
        conn = psycopg2.connect(dbname=dbname, user=user, host=host, password=password, port=port)
 
-       df.to_sql(table_name, conn, if_exists='append', index=False)
+       cur = conn.cursor()
+
+       cur.executemany(insert_data_query, df.values.tolist())
 
        conn.commit()
+
+       logging.info(f'Data was loaded to database')
 
     except psycopg2.Error as e:
         logging.error(f"Error occured during data loading: {e}")
     finally:
-            conn.close()
+        conn.close()
