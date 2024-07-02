@@ -1,16 +1,14 @@
 from constants import URL
-from extract import extract_one_user, extract_all_users, extracted_users
 from phonenumbers import geocoder
 from phonenumbers.phonenumberutil import NumberParseException
 from dataclasses import dataclass, field
-from typing import List, Dict
+from typing import List, Dict, Optional
 from geopy.geocoders import Nominatim
 from pydantic import BaseModel, EmailStr
 import pandas as pd
 import datetime
-import requests
 import phonenumbers
-import logging
+import time
 
 
 def full_name(df: pd.DataFrame) -> pd.DataFrame:
@@ -116,6 +114,7 @@ def validate_emails(df: pd.DataFrame) -> pd.DataFrame:
     emails = df['email'].tolist()
     for email in emails:
         try:
+
             validated_user = UserEmail(email=email)
         except pydantic.ValidationError as e:
             print(f'Validation Error: {e}')

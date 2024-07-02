@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS RandomUsersAPI (
                    ); """
 
 insert_data_query = f"""
-INSERT INTO RandomUsersAPI (id, gender, name, initials, location, date_of_birth, age, registration_date, age_as_user, email, phone, nat)
-VALUES (%s, %s, %s, %s, COALESCE(ST_GeomFromText(%s), NULL), %s, %s, %s, %s, %s, %s, %s)
+INSERT INTO RandomUsersAPI (gender, name, initials, location, date_of_birth, age, registration_date, age_as_user, email, phone, nat)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """
 
 

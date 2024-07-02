@@ -5,11 +5,12 @@ from typing import List, Dict
 from geopy.geocoders import Nominatim
 from pydantic import BaseModel, EmailStr
 from transform import *
+from load import *
+from phonenumbers import geocoder
 import pandas as pd
 import requests
 import logging
-from phonenumbers import geocoder
-from load import *
+
 
 # Extraction part
 
@@ -29,10 +30,8 @@ df = age_dob(df)
 df = age_user(df)
 df = drop_some_cols(df)
 df = reorder_cols(df)
-print(df.columns)
 
 # Loading part
-filename = 'all_data.json'
 load_to_raw_data(extracted_users)
 
 conn = psycopg2.connect(dbname="postgres", user="postgres", password="postgres", host="localhost", port='5432')
