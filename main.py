@@ -1,15 +1,8 @@
 from constants import URL, create_table_query # unused
 from extract import extract_one_user, extract_all_users # unused
-from dataclasses import dataclass # unused
-from typing import List, Dict # unused
-from geopy.geocoders import Nominatim # unused
-from pydantic import BaseModel, EmailStr # unused
-from transform import * # never import with * unless very specific case demands it
+from transform import *
 from load import * # import only things you require
-from phonenumbers import geocoder # unused
 import pandas as pd
-import requests # unused
-import logging # unused
 
 
 # GENERAL COMMENCTS ABOUT THE PROGRAM
@@ -17,13 +10,6 @@ import logging # unused
 1. __pycache__, .idea, should not be uploaded to github, they should be included in gitignore, so when you push to github, they are ignored
 
 2. why is gitignore located in .idea ???????????????? it should be located in the root of the project
-
-3. please commit to git as you go, I do not want to see all the files uplaoded all together with one common commit. it is best to see the progress,
-if you mess anything up, you can always go back to the latest commit and start from there. when commiting write commits in the present tense, 
-loaded data into table --> load data into table
-
-4. do not over complicate doc strings, they should not include things like what errors does the function
-raise or what logs does it log (don't believe everything chat gpt says)
 
 5, your function names are not descriptive enough, what does age_dob mean? what is age_user? try to come up with names
 that summerize the functionality, for age_dob I would go with ** calculate_user_age **, for age_user I would go with 
@@ -45,7 +31,8 @@ create a pull request for me to review and approve. try watching videos from syl
 
 
 # Extraction part
-# Calling function for extracting one user
+extracted_users = extract_all_users(URL)
+
 df = pd.DataFrame(extracted_users)
 
 # Transformation part
