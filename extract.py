@@ -16,6 +16,7 @@ def extract_one_user(URL: str) -> List[Dict]:
     Returns:
     dict: The first user data element if found, otherwise None.
     """
+    # no need to include raises in doc string, too much commenting can be hard to read, do not do it
 
     try:
         response = requests.get(url=URL)
@@ -44,9 +45,11 @@ def extract_all_users(URL: str) -> List[dict]:
     Returns:
          dict: A dictionary containing the extracted data.
     """
+    # no need to include logs in docstring as well
+
 
     extracted_users = [] # try not to save users in list and work on each response as you retrieve it, we will do batch processing later
-    for i in range(10000): # why hardcoding 5 as the number of users? this should be in the main.py
+    for i in range(5): # why hardcoding 5 as the number of users? this should be in the main.py
         user = extract_one_user(URL)
         if user:
             extracted_users.append(user)
@@ -58,4 +61,6 @@ def extract_all_users(URL: str) -> List[dict]:
     return extracted_users
 
 
+# why are you calling the function here, then you are importing extracted_users. call the function in main.py
+extracted_users = extract_all_users(URL)
 

@@ -1,6 +1,7 @@
 from constants import create_table_query, insert_data_query
 from extract import *
 from settings import dbname, user, host, password, port # unused
+from psycopg2.extras import execute_values # unused
 import pandas as pd
 import psycopg2
 import logging
