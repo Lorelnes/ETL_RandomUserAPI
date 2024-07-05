@@ -1,12 +1,13 @@
 from constants import create_table_query, insert_data_query
 from extract import *
-from settings import dbname, user, host, password, port
-from psycopg2.extras import execute_values
+from settings import dbname, user, host, password, port # unused
+from psycopg2.extras import execute_values # unused
 import pandas as pd
 import psycopg2
 import logging
 import os
 import json
+
 def load_to_raw_data(data: list, filename: str = 'all_data.json') -> None:
     raw_data_dir = 'raw_data'
     filepath = os.path.join(raw_data_dir, filename)
@@ -16,6 +17,7 @@ def load_to_raw_data(data: list, filename: str = 'all_data.json') -> None:
         logging.info(f'Data was saved to {filepath}')
 
 def create_table(conn) -> None:
+    # pass the query as an argument, easier to debug and understand
     """
       Creates a table in the connected database based on the provided schema.
 
@@ -23,6 +25,7 @@ def create_table(conn) -> None:
           conn: A psycopg2 connection object to the database.
 
       """
+    # what happens if the table exists?
     try:
         cur = conn.cursor()
         cur.execute(create_table_query)
@@ -44,11 +47,9 @@ def load_data_to_database(df: pd.DataFrame, dbname: str, user: str, host: str, p
          host: The hostname or IP address of the database server.
          password: The password for database access.
          port: The port number of the database server.
-
-     Raises:
-         psycopg2.Error: If an error occurs during database connection or data loading.
      """
     try:
+       # instead of creating connection every time, create it in main, use for all functions and then close it
        conn = psycopg2.connect(dbname=dbname, user=user, host=host, password=password, port=port)
 
        cur = conn.cursor()

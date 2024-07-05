@@ -1,5 +1,15 @@
 URL = "https://randomuser.me/api"
 
+# this query is hardcoded, try to define schema beforhand and then dinamically join it 
+# for example:
+
+# table_schema = {
+#     "id": "SERIAL PRIMARY KEY",
+#     "gender": "VARCHAR(255)"
+#     -----and so on-----
+# }
+
+
 create_table_query = """
 CREATE TABLE IF NOT EXISTS RandomUsersAPI (
                    id SERIAL PRIMARY KEY,
@@ -22,3 +32,6 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """
 
 
+# you can have columns to reorder here
+# columns_to_reorder = ['gender', 'name', 'initials', 'location', 'date_of_birth', 'age', 'registration_date', 'age_as_user',
+#                  'email', 'phone', 'nat']
