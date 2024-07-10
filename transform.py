@@ -40,34 +40,18 @@ def get_location(user_data: Dict[str, Any]) -> Optional[str]:
     return latitude, longitude
 
 
-    # location_data = row['location']
-    # latitude = location_data.get('coordinates', {}).get('latitude')
-    # longitude = location_data.get('coordinates', {}).get('longitude')
-    #
-    #
-    # geolocator =Nominatim(user_agent='geoapieExercises', timeout=20)
-    # coordinates = f"{latitude},{longitude}"
-    # Location = geolocator.geocode(coordinates)
-    #
-    # return Location
+def create_initials_column(user_data: Dict[str, Any]) -> Optional[str]:
+    '''
+    This function generates initials based on 'name' dictionary and creates separate dictionary to store those initials.
+    '''
+    name = user_data.get('name')
+    init = ""
+    for n in name.split():
+        init+=n[0]
+    user_data['initials'] = init
+    return init
 
 
-# def create_initials_column(name: str) -> str:
-#     '''
-#     This function generates initials based on 'name' column.
-#
-#     Args:
-#         name: column containing names and lastnames of users.
-#
-#     Returns:
-#         A string containing initials for users' full names.
-#     '''
-#     init = ""
-#     for n in name.split():
-#         init+=n[0]
-#     return init
-#
-#
 # def parsing_phoneloc(df: pd.DataFrame) -> pd.DataFrame:
 #     '''
 #     Creates 'phoneloc' column with phone numbers in E164 format.
