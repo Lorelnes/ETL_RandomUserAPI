@@ -3,6 +3,7 @@ from typing import List, Dict, Optional, Any
 from geopy.geocoders import Nominatim
 from pydantic import BaseModel, EmailStr
 from constants import columns_to_drop, columns_to_reorder
+from datetime import datetime
 import pandas as pd
 import phonenumbers
 
@@ -78,14 +79,18 @@ def validate_emails(user_data: Dict[str, Any]) -> Optional[str]:
         return None
 
 
+def dateofbirth_to_datetime(user_data: Dict[str, Any]) -> Optional[str]:
+    '''
+    This function formats 'dob' dictionary as datetime and creates another dictionary 'date_of_birth', which contains
+    users' date of birth in a more human readable format.
+    '''
+    dateofbirth = user_data.get('dob')
+    date_only = dateofbirth.get('date')
+    date_formatted = datetime.strptime(date_only, '%Y-%m-%dT%H:%M:%S.%fZ').date()
+    user_data['date_of_birth'] = date_formatted.strftime('%B %d, %Y')
+    return user_data
 
-# def dateofbirth_to_datetime(df: pd.DataFrame) -> pd.DataFrame:
-#     '''
-#     This function formats 'dob' column as datetime and creates another column 'date_of_birth'.
-#     '''
-#     df['date_of_birth'] = df['dob'].apply(lambda x: pd.to_datetime(x['date']))
-#     return df
-#
+
 # def registration_to_datetime(df: pd.DataFrame) -> pd.DataFrame:
 #     '''
 #     This function formats 'registered' column as datetime and creates another column 'registration_date'.
