@@ -2,7 +2,7 @@ from phonenumbers.phonenumberutil import NumberParseException
 from typing import List, Dict, Optional, Any
 from geopy.geocoders import Nominatim
 from pydantic import BaseModel, EmailStr
-from constants import columns_to_drop, columns_to_reorder
+from constants import keys_to_drop, keys_to_reorder
 from datetime import datetime
 import pandas as pd
 import phonenumbers
@@ -117,34 +117,40 @@ def calculate_user_age(user_data: Dict[str, Any]) -> Optional[str]:
     return user_data
 
 
-    # df['dob'] = df['dob'].apply(lambda x: pd.to_datetime(x['date']))
-    # df['age'] = today - df['dob'].dt.year
-    # return df
 
-# def calculate_registration_age(df: pd.DataFrame) -> pd.DataFrame:
-#     '''
-#     This function takes 'age' key from 'registered' column and dynamically calculates the registration age of the user,
-#     then creates 'age_as_user' column separately.
-#     '''
-#     today = pd.Timestamp.today().year
-#     df['registered'] = df['registered'].apply(lambda x: pd.to_datetime(x['date']))
-#     df['age_as_user'] = today - df['registered'].dt.year
-#     return df
-#
-#
-# def drop_unnecessary_columns(df: pd.DataFrame) -> pd.DataFrame:
-#     '''
-#     This function deletes columns that are not needed.
-#     '''
-#     df = df.drop([columns_to_drop])
-#     return df
-#
-# def reorder_columns(df: pd.DataFrame) -> pd.DataFrame:
-#     '''
-#     This function reorders columns in a more logical way.
-#     '''
-#
-#     return df[columns_to_reorder]
+def calculate_registration_age(user_data: Dict[str, Any]) -> Optional[str]:
+    '''
+    This function takes 'age' key from 'registered' dictionary and dynamically calculates the registration age of the user,
+    then creates 'age_as_user' dictionary separately.
+    '''
+    today = datetime.today().year
+    date_of_registration = user_data.get('registration_date')
+    date_year = datetime.strptime(date_of_registration, '%B %d, %Y')
+    year_of_registration = date_year.year
+    age_as_user = today - year_of_registration
+    user_data['age_as_user'] = age_as_user
+    return user_data
+
+
+def drop_unnecessary_keys(user_data: Dict[str, Any], keys_to_drop) -> Optional[str]:
+    '''
+    This function deletes columns that are not needed.
+    '''
+    for key in keys_to_drop:
+        user_data.pop(key)
+    return user_data
+
+
+
+def reorder_keys(user_data: Dict[str, Any], keys_to_reorder) -> Optional[str]:
+    '''
+    This function reorders columns in a more logical way.
+    '''
+    reordered_data = {key: user_data[key] for key in keys_to_reorder if key in user_data}
+    reordered_data.update({key: user_data[key] for key in user_data if key not in keys_to_reorder})
+    user_data.clear()
+    user_data.update(reordered_data)
+    return user_data
 
 
 

@@ -1,11 +1,11 @@
-from constants import URL, create_table_query, table_schema
+from constants import URL, create_table_query, table_schema, keys_to_drop, keys_to_reorder
 from extract import extract_one_user # unused
 from dataclasses import dataclass # unused
 from typing import List, Dict # unused
 from geopy.geocoders import Nominatim # unused
 from pydantic import BaseModel, EmailStr # unused
 from load import load_to_raw_data, create_table, load_data_to_database
-from transform import get_full_name, get_location, create_initials_column, parsing_phone_numbers, UserEmail, validate_emails, dateofbirth_to_datetime, registration_to_datetime, calculate_user_age
+from transform import get_full_name, get_location, create_initials_column, parsing_phone_numbers, UserEmail, validate_emails, dateofbirth_to_datetime, registration_to_datetime, calculate_user_age, calculate_registration_age, drop_unnecessary_keys, reorder_keys
 from settings import dbname, user, host, password, port
 from phonenumbers import geocoder # unused
 from psycopg2 import sql
@@ -38,6 +38,9 @@ validate_emails(user_data)
 dateofbirth_to_datetime(user_data)
 registration_to_datetime(user_data)
 calculate_user_age(user_data)
+calculate_registration_age(user_data)
+drop_unnecessary_keys(user_data, keys_to_drop)
+reorder_keys(user_data, keys_to_reorder)
 print(user_data)
 
 # Extraction part
