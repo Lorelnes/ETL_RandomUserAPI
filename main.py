@@ -1,36 +1,24 @@
-from constants import URL, create_table_query # unused
-from extract import extract_one_user, extract_all_users # unused
+from constants import URL, create_table_query, table_schema
+from extract import extract_one_user # unused
 from dataclasses import dataclass # unused
 from typing import List, Dict # unused
 from geopy.geocoders import Nominatim # unused
 from pydantic import BaseModel, EmailStr # unused
-from transform import * # never import with * unless very specific case demands it
-from load import * # import only things you require
+# from transform import get_full_name, get_location, create_initials_column, format_phone_number, parsing_phoneloc, validate_emails, dateofbirth_to_datetime, registration_to_datetime, calculate_user_age, calculate_registration_age, drop_unnecessary_columns, reorder_columns
+from load import load_to_raw_data, create_table, load_data_to_database
+from transform import get_full_name
+from settings import dbname, user, host, password, port
 from phonenumbers import geocoder # unused
+from psycopg2 import sql
 import pandas as pd
 import requests # unused
 import logging # unused
+import json
 
 
 # GENERAL COMMENCTS ABOUT THE PROGRAM
 """
-1. __pycache__, .idea, should not be uploaded to github, they should be included in gitignore, so when you push to github, they are ignored
 
-2. why is gitignore located in .idea ???????????????? it should be located in the root of the project
-
-3. please commit to git as you go, I do not want to see all the files uplaoded all together with one common commit. it is best to see the progress,
-if you mess anything up, you can always go back to the latest commit and start from there. when commiting write commits in the present tense, 
-loaded data into table --> load data into table
-
-4. do not over complicate doc strings, they should not include things like what errors does the function
-raise or what logs does it log (don't believe everything chat gpt says)
-
-5, your function names are not descriptive enough, what does age_dob mean? what is age_user? try to come up with names
-that summerize the functionality, for age_dob I would go with ** calculate_user_age **, for age_user I would go with 
-** calculate_registration_date. ** drop_some_cols is a SIN AND NIGTHMARE what is anyone going to understand in there?
-
-6. at this point you should be abel to write the same programm with OOP, next time try to follow OOP paradigm,
-in this cases we could have had classes like: ExtractUser, TransformUser, LoadUser, DatabaseConnector, clearer and much organized.
 
 ++++++++++++++++++++++++++++ FUTURE CONSIDERATIONS ++++++++++++++++++++++++++++
 7. when working on a project, good to have requirements.txt file, please look it up. when you use any kind of third party library
@@ -42,64 +30,34 @@ and when you are done freeze the requirements. one of the ways is to execute fol
 create a pull request for me to review and approve. try watching videos from syllabus or read material about branching strategies.
 """
 
-
+user_data = extract_one_user(URL)
+get_full_name(user_data)
+print(user_data)
 
 # Extraction part
+# extracted_users = extract_all_users(URL)
+
 # Calling function for extracting one user
-df = pd.DataFrame(extracted_users)
-
-# Transformation part
-
-# ABOUT TRANSFORMATION PART
-###################################################################################################
-# this may work but might lead to some erros if any mistakes are made (easily could happen)       #
-# in addition to that, you are overrwiting over the same df too many times, which is not efficient# 
-# if OOP was used you would have been able to chain this functions all together and would be      #
-# more beautiful and readable, but for now if we want to stick with this, please take a look      #
-# at !!!!pipe!!!!  functionality that pandas offers and try to use it, here is the link for it    #
-# https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.pipe.html                         #
-###################################################################################################
-
-# you can add logging statements here, to see how the progress is going
-
-df = full_name(df) # bad function naming
-df['location'] = df.apply(get_location, axis=1)
-df['initials'] = df['name'].apply(initials) # initials ---> bad function naming
-df = parsing_phoneloc(df)
-df = validate_emails(df)
-df = dob_to_datetime(df)
-df = reg_to_datetime(df)
-df = age_dob(df) # bad function naming
-df = age_user(df) # bad function naming
-df = drop_some_cols(df) # bad function naming
-df = reorder_cols(df)
-
-# Loading part
-load_to_raw_data(extracted_users)
-
-# this part is tricky, read carefully
-############################################################################################
-# first, you are creating a connection to a db and using it for create_table func          # 
-# that makes sense, then you need to load into the table, so in the func, you are          # 
-# creating another connection and then closing it. keep in mind that opening and closing   #
-# connections is a heavy operation, so why dont you create one conn outside those funcs and#
-# use that connection for the functions as arguments?                                      #
-############################################################################################
-
-################################### EXAMPLE #####################################
-# create conn here conn = whatever code goes here                               #
-# call create table function with that conn                                     #
-# call load_data_to_database and pass conn as one of the arguments              #
-# close the connections at last                                                 #
-#################################################################################
-
-# SEPARATE COMMENT
-# you have dbname, user, password, host, port defined in settings.py why are you not using them??
-# do not hardcode things like that
-conn = psycopg2.connect(dbname="postgres", user="postgres", password="postgres", host="localhost", port='5432')
-create_table(conn) # what table? better to pass the query as an argument, more readable
-
-# dbname, user, host, password, port where are they imported from?
-# as I understand, you are importing them in load.py and then importing load.py to main using *. that is horrible, import the constants
-# directly in the main.py, you do not need them in the load.py
-load_data_to_database(df, dbname, user, host, password, port)
+# df = pd.DataFrame(extracted_users)
+#
+# # Transformation part
+# get_full_name(df)
+# print(df.columns)
+# df['location'] = df.apply(get_location, axis=1)
+# print(df.columns)
+#
+# df['initials'] = df['name'].apply(create_initials_column)
+# df = parsing_phoneloc(df)
+# df = format_phone_number(df)
+# print(df.columns)
+# df = (df.pipe(validate_emails).pipe(dateofbirth_to_datetime).pipe(registration_to_datetime).pipe(calculate_user_age).pipe(calculate_registration_age).pipe(drop_unnecessary_columns).pipe(reorder_columns))
+#
+#
+# # Loading part
+# load_to_raw_data(extracted_users)
+#
+# conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+# create_table(conn, create_table_query)
+#
+# load_data_to_database(df, conn)
+# conn.close()
