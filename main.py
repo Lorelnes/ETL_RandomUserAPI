@@ -6,7 +6,7 @@ from geopy.geocoders import Nominatim # unused
 from pydantic import BaseModel, EmailStr # unused
 # from transform import get_full_name, get_location, create_initials_column, format_phone_number, parsing_phoneloc, validate_emails, dateofbirth_to_datetime, registration_to_datetime, calculate_user_age, calculate_registration_age, drop_unnecessary_columns, reorder_columns
 from load import load_to_raw_data, create_table, load_data_to_database
-from transform import get_full_name
+from transform import get_full_name, get_location
 from settings import dbname, user, host, password, port
 from phonenumbers import geocoder # unused
 from psycopg2 import sql
@@ -32,6 +32,7 @@ create a pull request for me to review and approve. try watching videos from syl
 
 user_data = extract_one_user(URL)
 get_full_name(user_data)
+get_location(user_data)
 print(user_data)
 
 # Extraction part

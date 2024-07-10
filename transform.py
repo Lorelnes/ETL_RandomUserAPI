@@ -21,20 +21,23 @@ def get_full_name(user_data: Dict[str, Any]) -> Optional[str]:
     return first_name, last_name
 
 
-def get_location(row: Dict) -> Optional[str]:
+def get_location(user_data: Dict[str, Any]) -> Optional[str]:
     '''
-    This function extracts latitude and longitude from the 'coordinates' dictionary
-    in the 'location' column.
+    This function extracts latitude and longitude from the 'coordinates' nested dictionary
+    in the 'location' dictionary.
     Dynamically finds location using those coordinates.
-
-    Args:
-        row: A dictionary containing the extracted data.
-
-    Returns:
-        Location which is a string containing detailed location information or None if
-        the location is not found.
     '''
-
+    location_data = user_data.get('location', {})
+    coordinates = location_data.get('coordinates')
+    latitude = coordinates.get('latitude')
+    longitude = coordinates.get('longitude')
+    if not latitude or not longitude:
+        return None
+    geolocator = Nominatim(user_agent='geoapieExercises', timeout=20)
+    both_coordinates = f'{latitude},{longitude}'
+    dynamic_location = geolocator.geocode(both_coordinates)
+    user_data['location'] = dynamic_location
+    return latitude, longitude
 
 
     # location_data = row['location']
