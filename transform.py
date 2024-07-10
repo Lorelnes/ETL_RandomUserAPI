@@ -102,17 +102,25 @@ def registration_to_datetime(user_data: Dict[str, Any]) -> Optional[str]:
     user_data['registration_date'] = formatted_date.strftime('%B %d, %Y')
     return user_data
 
-# def calculate_user_age(df: pd.DataFrame) -> pd.DataFrame:
-#     '''
-#     This function takes 'date' key from 'dob' column and dynamically calculates the age of the user,
-#     then creates 'age' column separately.
-#     '''
-#
-#     today = pd.Timestamp.today().year
-#     df['dob'] = df['dob'].apply(lambda x: pd.to_datetime(x['date']))
-#     df['age'] = today - df['dob'].dt.year
-#     return df
-#
+def calculate_user_age(user_data: Dict[str, Any]) -> Optional[str]:
+    '''
+    This function takes 'date' key from 'dob' dictionary and dynamically calculates the age of the user,
+    then creates 'age' dictionary separately.
+    '''
+
+    today = datetime.today().year
+    date_of_birth = user_data.get('date_of_birth')
+    date_year = datetime.strptime(date_of_birth, '%B %d, %Y')
+    year_of_birth = date_year.year
+    age_of_user = today - year_of_birth
+    user_data['age'] = age_of_user
+    return user_data
+
+
+    # df['dob'] = df['dob'].apply(lambda x: pd.to_datetime(x['date']))
+    # df['age'] = today - df['dob'].dt.year
+    # return df
+
 # def calculate_registration_age(df: pd.DataFrame) -> pd.DataFrame:
 #     '''
 #     This function takes 'age' key from 'registered' column and dynamically calculates the registration age of the user,
