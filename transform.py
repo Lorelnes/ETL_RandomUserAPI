@@ -65,28 +65,20 @@ def parsing_phone_numbers(user_data: Dict[str, Any]) -> Optional[str]:
         return None
 
 
+class UserEmail(BaseModel):
+    email: EmailStr
 
-# def validate_emails(df: pd.DataFrame) -> pd.DataFrame:
-#     '''
-#     This function is used to create Pydantic class to validate emails.
-#     '''
-#     # this class is defined inside a function and you are not even using it
-#     # I do not see a reason why you should be definind a class inside a function, even more a dataclass
-#     # if you want to validate your data, create a class outside of a function and use it.
-#     class UserEmail(BaseModel):
-#         email: EmailStr
-#
-#     emails = df['email'].tolist()
-#     for email in emails:
-#         try:
-#             #  you are validating the user email and then just returning same email, how is that going to work?
-#             validated_user = UserEmail(email=email)
-#         except pydantic.ValidationError as e:
-#             # log the error, do not print it
-#             logging.error(f'Validation Error {e}')
-#     return df
-#
-#
+def validate_emails(user_data: Dict[str, Any]) -> Optional[str]:
+    try:
+        validated_email = UserEmail(email=user_data.get('email'))
+        user_data['email'] = validated_email.email
+        return user_data
+    except ValidationError as e:
+        logging.error(f'Validation error: {e}')
+        return None
+
+
+
 # def dateofbirth_to_datetime(df: pd.DataFrame) -> pd.DataFrame:
 #     '''
 #     This function formats 'dob' column as datetime and creates another column 'date_of_birth'.
