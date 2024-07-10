@@ -1,5 +1,5 @@
 from phonenumbers.phonenumberutil import NumberParseException
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from geopy.geocoders import Nominatim
 from pydantic import BaseModel, EmailStr
 from constants import columns_to_drop, columns_to_reorder
@@ -7,44 +7,48 @@ import pandas as pd
 import phonenumbers
 
 
-def get_full_name(user_data):
+def get_full_name(user_data: Dict[str, Any]) -> Optional[str]:
     '''
-    This function takes 'first' and 'last' keys from 'name' dict and puts them together to replace
-    'name' column with first name and last name.
+    This function takes 'first' and 'last' keys from 'name' dictionary and puts them together to replace
+    'name' dictionary with first name and last name.
     '''
     name_data = user_data.get('name', {})
     first_name = name_data.get('first')
     last_name = name_data.get('last')
+    if not first_name or not last_name:
+        return None
     user_data['name'] = first_name + ' ' + last_name
     return first_name, last_name
 
-#
-# def get_location(row: Dict) -> Optional[str]:
-#     '''
-#     This function extracts latitude and longitude from the 'coordinates' dictionary
-#     in the 'location' column.
-#     Dynamically finds location using those coordinates.
-#
-#     Args:
-#         row: A dictionary containing the extracted data.
-#
-#     Returns:
-#         Location which is a string containing detailed location information or None if
-#         the location is not found.
-#     '''
-#
-#     location_data = row['location']
-#     latitude = location_data.get('coordinates', {}).get('latitude')
-#     longitude = location_data.get('coordinates', {}).get('longitude')
-#
-#
-#     geolocator =Nominatim(user_agent='geoapieExercises', timeout=20)
-#     coordinates = f"{latitude},{longitude}"
-#     Location = geolocator.geocode(coordinates)
-#
-#     return Location
-#
-#
+
+def get_location(row: Dict) -> Optional[str]:
+    '''
+    This function extracts latitude and longitude from the 'coordinates' dictionary
+    in the 'location' column.
+    Dynamically finds location using those coordinates.
+
+    Args:
+        row: A dictionary containing the extracted data.
+
+    Returns:
+        Location which is a string containing detailed location information or None if
+        the location is not found.
+    '''
+
+
+
+    # location_data = row['location']
+    # latitude = location_data.get('coordinates', {}).get('latitude')
+    # longitude = location_data.get('coordinates', {}).get('longitude')
+    #
+    #
+    # geolocator =Nominatim(user_agent='geoapieExercises', timeout=20)
+    # coordinates = f"{latitude},{longitude}"
+    # Location = geolocator.geocode(coordinates)
+    #
+    # return Location
+
+
 # def create_initials_column(name: str) -> str:
 #     '''
 #     This function generates initials based on 'name' column.
