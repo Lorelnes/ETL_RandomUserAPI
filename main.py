@@ -5,7 +5,7 @@ from typing import List, Dict # unused
 from geopy.geocoders import Nominatim # unused
 from pydantic import BaseModel, EmailStr # unused
 from load import load_to_raw_data, create_table, load_data_to_database
-from transform import get_full_name, get_location, create_initials_column, parsing_phone_numbers, UserEmail, validate_emails, dateofbirth_to_datetime
+from transform import get_full_name, get_location, create_initials_column, parsing_phone_numbers, UserEmail, validate_emails, dateofbirth_to_datetime, registration_to_datetime
 from settings import dbname, user, host, password, port
 from phonenumbers import geocoder # unused
 from psycopg2 import sql
@@ -36,6 +36,7 @@ create_initials_column(user_data)
 parsing_phone_numbers(user_data)
 validate_emails(user_data)
 dateofbirth_to_datetime(user_data)
+registration_to_datetime(user_data)
 
 print(user_data)
 
