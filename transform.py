@@ -84,8 +84,8 @@ def dateofbirth_to_datetime(user_data: Dict[str, Any]) -> Optional[str]:
     This function formats 'dob' dictionary as datetime and creates another dictionary 'date_of_birth', which contains
     users' date of birth in a more human readable format.
     '''
-    dateofbirth = user_data.get('dob')
-    date_only = dateofbirth.get('date')
+    dates_of_birth = user_data.get('dob')
+    date_only = dates_of_birth.get('date')
     date_formatted = datetime.strptime(date_only, '%Y-%m-%dT%H:%M:%S.%fZ').date()
     user_data['date_of_birth'] = date_formatted.strftime('%B %d, %Y')
     return user_data
@@ -93,10 +93,11 @@ def dateofbirth_to_datetime(user_data: Dict[str, Any]) -> Optional[str]:
 
 def registration_to_datetime(user_data: Dict[str, Any]) -> Optional[str]:
     '''
-    This function formats 'registered' column as datetime and creates another column 'registration_date'.
+    This function formats 'registered' dictionary as datetime and creates another dictionary 'registration_date'.
+    which contains dates of registration in a more human readable format.
     '''
-    dateofregistration = user_data.get('registered')
-    only_date = dateofregistration.get('date')
+    dates_of_registration = user_data.get('registered')
+    only_date = dates_of_registration.get('date')
     formatted_date = datetime.strptime(only_date, '%Y-%m-%dT%H:%M:%S.%fZ').date()
     user_data['registration_date'] = formatted_date.strftime('%B %d, %Y')
     return user_data
