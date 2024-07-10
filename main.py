@@ -5,7 +5,7 @@ from typing import List, Dict # unused
 from geopy.geocoders import Nominatim # unused
 from pydantic import BaseModel, EmailStr # unused
 from load import load_to_raw_data, create_table, load_data_to_database
-from transform import get_full_name, get_location, create_initials_column
+from transform import get_full_name, get_location, create_initials_column, parsing_phone_numbers
 from settings import dbname, user, host, password, port
 from phonenumbers import geocoder # unused
 from psycopg2 import sql
@@ -33,6 +33,7 @@ user_data = extract_one_user(URL)
 get_full_name(user_data)
 get_location(user_data)
 create_initials_column(user_data)
+parsing_phone_numbers(user_data)
 
 print(user_data)
 

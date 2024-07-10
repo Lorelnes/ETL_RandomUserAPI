@@ -52,40 +52,20 @@ def create_initials_column(user_data: Dict[str, Any]) -> Optional[str]:
     return init
 
 
-# def parsing_phoneloc(df: pd.DataFrame) -> pd.DataFrame:
-#     '''
-#     Creates 'phoneloc' column with phone numbers in E164 format.
-#
-#     Args:
-#         df: Pandas DataFrame containing 'phone' and 'nat' columns.
-#
-#     Returns:
-#         The modified DataFrame with the 'phoneloc' column.
-#     '''
-#     df['phoneloc'] = df[['phone', 'nat']].apply(lambda x: f"{x['phone']}, {x['nat']}", axis=1)
-#
-#     # Apply format_phone_number function to each element in 'phoneloc' column
-#     df['phoneloc'] = df['phoneloc'].apply(format_phone_number)
-#     return df
-#
-#
-# def format_phone_number(phoneloc_str: str) -> Optional[str]:
-#     '''
-#     Parses and formats a phone number string in E164 format.
-#
-#     Args:
-#         phoneloc_str: A string containing phone number and nationality.
-#
-#     Returns:
-#         The parsed phone number in E164 format (or None if parsing fails).
-#     '''
-#     try:
-#         phnumber = phonenumbers.parse(phoneloc_str, None)
-#         return phonenumbers.format_number(phnumber, phonenumbers.PhoneNumberFormat.E164)
-#     except phonenumbers.NumberParseException:
-#         return None
-#
-#
+def parsing_phone_numbers(user_data: Dict[str, Any]) -> Optional[str]:
+    '''
+    Creates 'phoneloc' column with phone numbers in E164 format.
+    '''
+    phone_location = user_data.get('phone') + ' , ' + user_data.get('nat')
+    try:
+        phone_number = phonenumbers.parse(phone_location, None)
+        user_data['phone'] = phone_number
+        return phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.E164)
+    except NumberParseException:
+        return None
+
+
+
 # def validate_emails(df: pd.DataFrame) -> pd.DataFrame:
 #     '''
 #     This function is used to create Pydantic class to validate emails.
