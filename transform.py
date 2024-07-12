@@ -1,10 +1,9 @@
 from phonenumbers.phonenumberutil import NumberParseException
-from typing import List, Dict, Optional, Any
+from typing import Dict, Optional, Any
 from geopy.geocoders import Nominatim
 from pydantic import BaseModel, EmailStr
 from constants import keys_to_drop, keys_to_reorder
 from datetime import datetime
-import pandas as pd
 import phonenumbers
 
 
@@ -34,11 +33,13 @@ def get_location(user_data: Dict[str, Any]) -> Optional[str]:
     longitude = coordinates.get('longitude')
     if not latitude or not longitude:
         return None
-    geolocator = Nominatim(user_agent='geoapieExercises', timeout=20)
+    geolocator = Nominatim(user_agent='geoapieExercises', timeout=25)
     both_coordinates = f'{latitude},{longitude}'
     dynamic_location = geolocator.geocode(both_coordinates)
-    user_data['location'] = dynamic_location
+    user_data['location'] = dynamic_location.address if dynamic_location else None
     return latitude, longitude
+
+
 
 
 def create_initials_column(user_data: Dict[str, Any]) -> Optional[str]:
@@ -86,8 +87,19 @@ def dateofbirth_to_datetime(user_data: Dict[str, Any]) -> Optional[str]:
     '''
     dates_of_birth = user_data.get('dob')
     date_only = dates_of_birth.get('date')
-    date_formatted = datetime.strptime(date_only, '%Y-%m-%dT%H:%M:%S.%fZ').date()
-    user_data['date_of_birth'] = date_formatted.strftime('%B %d, %Y')
+    # date_with_timezone = datetime.strptime(date_only, "%Y-%m-%dT%H:%M:%S.%fZ")
+    # date_without_timezone = date_with_timezone.replace(tzinfo=None)
+    # date_formatted = date_with_timezone.strftime("%Y-%m-%d")
+    # user_data['date_of_birth'] = date_formatted
+    date_formatted = date_only.split('T')[0]
+    date_formatted = datetime.strptime(date_formatted, "%Y-%m-%d").date().strftime('%Y-%m-%d')
+    user_data['date_of_birth'] = date_formatted
+
+    # date_formatted = datetime.strptime(date_only, "%Y-%m-%dT%H:%M:%S.%fZ")
+    # date_without_timezone = date_formatted.replace(tzinfo=None)
+    # date_into_string = date_without_timezone.strftime('%Y-%m-%d')
+    # date_to_apply = datetime.strptime(date_into_string, '%Y-%m-%d')
+    # user_data['date_of_birth'] = date_to_apply
     return user_data
 
 
@@ -110,7 +122,8 @@ def calculate_user_age(user_data: Dict[str, Any]) -> Optional[str]:
 
     today = datetime.today().year
     date_of_birth = user_data.get('date_of_birth')
-    date_year = datetime.strptime(date_of_birth, '%B %d, %Y')
+    # date_of_birth_string = date_of_birth.strftime('%Y-%m-%d')
+    date_year = datetime.strptime(date_of_birth, '%Y-%m-%d')
     year_of_birth = date_year.year
     age_of_user = today - year_of_birth
     user_data['age'] = age_of_user
