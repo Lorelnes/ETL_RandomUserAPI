@@ -1,4 +1,4 @@
-from phonenumbers.phonenumberutil import NumberParseException
+from phonenumbers.phonenumberutil import NumberParseException, PhoneNumberFormat
 from typing import Dict, Optional, Any
 from geopy.geocoders import Nominatim
 from pydantic import BaseModel, EmailStr
@@ -40,8 +40,6 @@ def get_location(user_data: Dict[str, Any]) -> Optional[str]:
     return latitude, longitude
 
 
-
-
 def create_initials_column(user_data: Dict[str, Any]) -> Optional[str]:
     '''
     This function generates initials based on 'name' dictionary and creates separate dictionary to store those initials.
@@ -53,10 +51,9 @@ def create_initials_column(user_data: Dict[str, Any]) -> Optional[str]:
     user_data['initials'] = init
     return init
 
-
 def parsing_phone_numbers(user_data: Dict[str, Any]) -> Optional[str]:
     '''
-    Creates 'phoneloc' column with phone numbers in E164 format.
+    Formats phone numbers in E164 format.
     '''
     phone_location = user_data.get('phone') + ' , ' + user_data.get('nat')
     try:
@@ -71,6 +68,9 @@ class UserEmail(BaseModel):
     email: EmailStr
 
 def validate_emails(user_data: Dict[str, Any]) -> Optional[str]:
+    '''
+    This function validates email addresses using Pydantic class defined above.
+    '''
     try:
         validated_email = UserEmail(email=user_data.get('email'))
         user_data['email'] = validated_email.email
@@ -83,23 +83,12 @@ def validate_emails(user_data: Dict[str, Any]) -> Optional[str]:
 def dateofbirth_to_datetime(user_data: Dict[str, Any]) -> Optional[str]:
     '''
     This function formats 'dob' dictionary as datetime and creates another dictionary 'date_of_birth', which contains
-    users' date of birth in a more human readable format.
+    users' date of birth without timezone and formatted into datetime.
     '''
     dates_of_birth = user_data.get('dob')
     date_only = dates_of_birth.get('date')
-    # date_with_timezone = datetime.strptime(date_only, "%Y-%m-%dT%H:%M:%S.%fZ")
-    # date_without_timezone = date_with_timezone.replace(tzinfo=None)
-    # date_formatted = date_with_timezone.strftime("%Y-%m-%d")
-    # user_data['date_of_birth'] = date_formatted
     date_formatted = date_only.split('T')[0]
-    date_formatted = datetime.strptime(date_formatted, "%Y-%m-%d").date().strftime('%Y-%m-%d')
     user_data['date_of_birth'] = date_formatted
-
-    # date_formatted = datetime.strptime(date_only, "%Y-%m-%dT%H:%M:%S.%fZ")
-    # date_without_timezone = date_formatted.replace(tzinfo=None)
-    # date_into_string = date_without_timezone.strftime('%Y-%m-%d')
-    # date_to_apply = datetime.strptime(date_into_string, '%Y-%m-%d')
-    # user_data['date_of_birth'] = date_to_apply
     return user_data
 
 
@@ -119,17 +108,13 @@ def calculate_user_age(user_data: Dict[str, Any]) -> Optional[str]:
     This function takes 'date' key from 'dob' dictionary and dynamically calculates the age of the user,
     then creates 'age' dictionary separately.
     '''
-
     today = datetime.today().year
     date_of_birth = user_data.get('date_of_birth')
-    # date_of_birth_string = date_of_birth.strftime('%Y-%m-%d')
     date_year = datetime.strptime(date_of_birth, '%Y-%m-%d')
     year_of_birth = date_year.year
     age_of_user = today - year_of_birth
     user_data['age'] = age_of_user
     return user_data
-
-
 
 def calculate_registration_age(user_data: Dict[str, Any]) -> Optional[str]:
     '''
