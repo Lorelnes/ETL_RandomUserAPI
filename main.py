@@ -1,4 +1,4 @@
-from constants import URL, create_table_query, table_schema, keys_to_drop, keys_to_reorder
+from constants import URL, create_table_query, table_schema, keys_to_drop, keys_to_reorder, insert_data_query
 from extract import extract_one_user
 from transform import get_full_name, get_location, create_initials_column, parsing_phone_numbers, UserEmail, validate_emails, dateofbirth_to_datetime, registration_to_datetime, calculate_user_age, calculate_registration_age, drop_unnecessary_keys, reorder_keys
 from load import load_to_raw_data, create_table, load_data_to_database
@@ -8,11 +8,24 @@ import pandas as pd
 import json
 import psycopg2
 
+# data_list = []
+# for i in range(10000):
+#     all_raw_data = extract_one_user(URL)
+#     # data_list.append(all_raw_data)
+#
+#     load_to_raw_data(all_raw_data, filename='all_data.json')
+
+
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
 create_table(conn, create_table_query)
 
-for i in range(3):
+
+for i in range(10000):
+    all_user_data = []
     user_data = extract_one_user(URL)
+    all_user_data.append(user_data)
+    load_to_raw_data(all_user_data)
+
     get_full_name(user_data)
     get_location(user_data)
     create_initials_column(user_data)
@@ -25,8 +38,8 @@ for i in range(3):
     drop_unnecessary_keys(user_data, keys_to_drop)
     reorder_keys(user_data, keys_to_reorder)
 
-# Loading part
+    data = tuple(v for v in user_data.values())
+    load_data_to_database(data, conn)
 
-data = tuple(v for v in user_data.values())
-load_data_to_database(data, conn)
 conn.close()
+

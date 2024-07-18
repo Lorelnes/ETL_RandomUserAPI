@@ -8,12 +8,12 @@ import logging
 import os
 import json
 
-def load_to_raw_data(data: list, filename: str = 'all_data.json') -> None:
+def load_to_raw_data(all_user_data: list, filename: str = 'all_data.json') -> None:
     raw_data_dir = 'raw_data'
     filepath = os.path.join(raw_data_dir, filename)
 
     with open(filepath, 'w') as json_file:
-        json.dump(data, json_file, indent = 4)
+        json.dump(all_user_data, json_file, indent = 2)
         logging.info(f'Data was saved to {filepath}')
 
 def create_table(conn, create_table_query) -> None:
