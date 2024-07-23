@@ -8,20 +8,12 @@ import pandas as pd
 import json
 import psycopg2
 
-# data_list = []
-# for i in range(10000):
-#     all_raw_data = extract_one_user(URL)
-#     # data_list.append(all_raw_data)
-#
-#     load_to_raw_data(all_raw_data, filename='all_data.json')
-
-
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
 create_table(conn, create_table_query)
 
-
+all_user_data = []
 for i in range(10000):
-    all_user_data = []
+    # all_user_data = []
     user_data = extract_one_user(URL)
     all_user_data.append(user_data)
     load_to_raw_data(all_user_data)
